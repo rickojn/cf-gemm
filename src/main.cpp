@@ -17,6 +17,9 @@ int main(int argc, char *argv[]) {
     if (argc >= 4) { M = std::stoul(argv[1]); N = std::stoul(argv[2]); K = std::stoul(argv[3]); }
     int warmup = 5;
     int iterations = 10;
+
+    printf("Matrix size: M=%d, N=%d, K=%d\n", M, N, K);
+    printf("Warmup iterations: %d, Timed iterations: %d\n", warmup, iterations);
     
     // Allocate matrices
     float *A = new float[M * K];
@@ -38,18 +41,20 @@ int main(int argc, char *argv[]) {
         void (*func)(const float*, const float*, float*, size_t, size_t, size_t);
     } tests[] = {
         {"naive",   naive_matmul},
-        //{"ikj",     ikj_matmul}
+        {"ikj",     ikj_matmul}
     };
     
     // Run each implementation
-    for (int t = 0; t < 1; t++) {
+    for (int t = 0; t < 2; t++) {
         printf("\n=== %s ===\n", tests[t].name);
         
         // Warmup
+        printf("Warming up...\n");
         for (int i = 0; i < warmup; i++)
             tests[t].func(A, B, C, M, N, K);
         
         // Timed runs (for sanity check)
+        printf("Running benchmark...\n");
         clock_t start = clock();
         for (int i = 0; i < iterations; i++)
             tests[t].func(A, B, C, M, N, K);
