@@ -1,0 +1,1 @@
+perf stat -d ./release/main 512 512 512
